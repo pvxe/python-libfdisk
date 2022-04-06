@@ -1,3 +1,15 @@
+/*
+ * (C) 2022 Soleta Consulting S.L. <info@soleta.eu>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * Author: Jose M. Guisado <jguisado@soleta.eu>
+ */
+
+
 #include "fdisk.h"
 
 static PyMemberDef Context_members[] = {
