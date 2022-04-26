@@ -44,6 +44,7 @@ extern PyTypeObject PartitionType;
 
 extern void Context_AddModuleObject(PyObject *mod);
 extern void Label_AddModuleObject(PyObject *mod);
+extern void Partition_AddModuleObject(PyObject *mod);
 
 extern PyObject *PyObjectResultStr(const char *s);
 extern PyObject *PyObjectResultLabel(struct fdisk_label *lb);
