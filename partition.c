@@ -94,43 +94,18 @@ static PyObject *Partition_repr(PartitionObject *self)
 
 PyTypeObject PartitionType = {
 	PyVarObject_HEAD_INIT(NULL, 0)
-	"libfdisk.Partition", /*tp_name*/
-	sizeof(PartitionObject), /*tp_basicsize*/
-	0, /*tp_itemsize*/
-	(destructor)Partition_dealloc, /*tp_dealloc*/
-	0, /*tp_print*/
-	NULL, /*tp_getattr*/
-	NULL, /*tp_setattr*/
-	NULL, /*tp_compare*/
-	(reprfunc) Partition_repr,
-	NULL, /*tp_as_number*/
-	NULL, /*tp_as_sequence*/
-	NULL, /*tp_as_mapping*/
-	NULL, /*tp_hash */
-	NULL, /*tp_call*/
-	NULL, /*tp_str*/
-	NULL, /*tp_getattro*/
-	NULL, /*tp_setattro*/
-	NULL, /*tp_as_buffer*/
-	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /*tp_flags*/
-	Partition_HELP, /* tp_doc */
-	NULL, /* tp_traverse */
-	NULL, /* tp_clear */
-	NULL, /* tp_richcompare */
-	0, /* tp_weaklistoffset */
-	NULL, /* tp_iter */
-	NULL, /* tp_iternext */
-	Partition_methods, /* tp_methods */
-	Partition_members, /* tp_members */
-	Partition_getseters, /* tp_getset */
-	NULL, /* tp_base */
-	NULL, /* tp_dict */
-	NULL, /* tp_descr_get */
-	NULL, /* tp_descr_set */
-	0, /* tp_dictoffset */
-	(initproc)Partition_init, /* tp_init */
-	NULL, /* tp_alloc */
-	Partition_new, /* tp_new */
+	.tp_name = "libfdisk.Partition",
+	.tp_basicsize = sizeof(PartitionObject),
+	.tp_itemsize = 0,
+	.tp_dealloc = (destructor)Partition_dealloc,
+	.tp_repr = (reprfunc) Partition_repr,
+	.tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+	.tp_doc = PyDoc_STR(Partition_HELP),
+	.tp_methods = Partition_methods,
+	.tp_members = Partition_members,
+	.tp_getset = Partition_getseters,
+	.tp_init = (initproc)Partition_init,
+	.tp_new = Partition_new,
 };
 
 PyObject *PyObjectResultPartition(struct fdisk_partition *pa)

@@ -88,43 +88,17 @@ static PyObject *Label_repr(LabelObject *self)
 
 PyTypeObject LabelType = {
 	PyVarObject_HEAD_INIT(NULL, 0)
-	"libfdisk.Label", /*tp_name*/
-	sizeof(LabelObject), /*tp_basicsize*/
-	0, /*tp_itemsize*/
-	(destructor)Label_dealloc, /*tp_dealloc*/
-	0, /*tp_print*/
-	NULL, /*tp_getattr*/
-	NULL, /*tp_setattr*/
-	NULL, /*tp_compare*/
-	(reprfunc) Label_repr,
-	NULL, /*tp_as_number*/
-	NULL, /*tp_as_sequence*/
-	NULL, /*tp_as_mapping*/
-	NULL, /*tp_hash */
-	NULL, /*tp_call*/
-	NULL, /*tp_str*/
-	NULL, /*tp_getattro*/
-	NULL, /*tp_setattro*/
-	NULL, /*tp_as_buffer*/
-	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /*tp_flags*/
-	Label_HELP, /* tp_doc */
-	NULL, /* tp_traverse */
-	NULL, /* tp_clear */
-	NULL, /* tp_richcompare */
-	0, /* tp_weaklistoffset */
-	NULL, /* tp_iter */
-	NULL, /* tp_iternext */
-	Label_methods, /* tp_methods */
-	Label_members, /* tp_members */
-	Label_getseters, /* tp_getset */
-	NULL, /* tp_base */
-	NULL, /* tp_dict */
-	NULL, /* tp_descr_get */
-	NULL, /* tp_descr_set */
-	0, /* tp_dictoffset */
-	(initproc)Label_init, /* tp_init */
-	NULL, /* tp_alloc */
-	Label_new, /* tp_new */
+	.tp_name = "libfdisk.Label",
+	.tp_basicsize = sizeof(LabelObject),
+	.tp_dealloc = (destructor)Label_dealloc,
+	.tp_repr = (reprfunc) Label_repr,
+	.tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+	.tp_doc = Label_HELP,
+	.tp_methods = Label_methods,
+	.tp_members = Label_members,
+	.tp_getset = Label_getseters,
+	.tp_init = (initproc)Label_init,
+	.tp_new = Label_new,
 };
 
 PyObject *PyObjectResultLabel(struct fdisk_label *lb)
