@@ -160,7 +160,7 @@ static PyObject *Context_get_nparts(ContextObject *self)
 {
 	return PyLong_FromLong(fdisk_table_get_nents(self->tb));
 }
-static PyObject *Context_get_parts(ContextObject *self)
+static PyObject *Context_get_partitions(ContextObject *self)
 {
 	PyObject *p, *list = PyList_New(0); /* XXX: null if failed*/
 	struct fdisk_partition *pa;
@@ -188,7 +188,7 @@ static PyGetSetDef Context_getseters[] = {
 	{"devname",	(getter)Context_get_devname, NULL, "context devname", NULL},
 	{"label",	(getter)Context_get_label, NULL, "context label type", NULL},
 	{"nparts",	(getter)Context_get_nparts, NULL, "context label number of existing partitions", NULL},
-	{"parts",	(getter)Context_get_parts, NULL, "context partitions", NULL},
+	{"partitions",	(getter)Context_get_partitions, NULL, "context partitions", NULL},
 	{NULL}
 };
 
