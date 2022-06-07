@@ -182,6 +182,35 @@ static PyObject *Context_get_partitions(ContextObject *self)
 
 	return list;
 }
+static PyObject *Context_get_size_unit(ContextObject *self)
+{
+	return PyLong_FromLong(fdisk_get_size_unit(self->cxt));
+}
+static int Context_set_size_unit(ContextObject *self, PyObject *value, void *closure)
+{
+	int cval, ret;
+
+	if (value == NULL) {
+		PyErr_SetString(PyExc_TypeError,
+				"Cannot set unit size: null size type");
+		return -1;
+	}
+
+	if (!PyLong_Check(value)) {
+		PyErr_SetString(PyExc_TypeError,
+				"Cannot set unit size: invalid size type");
+		return -1;
+	}
+
+	cval = (int) PyLong_AsLong(value);
+	if (fdisk_set_size_unit(self->cxt, cval) < 0) {
+		PyErr_SetString(PyExc_TypeError,
+				"Cannot set unit size: invalid size type value");
+		return -1;
+	}
+
+	return 0;
+}
 static PyGetSetDef Context_getseters[] = {
 	{"nsectors",	(getter)Context_get_nsectors, NULL, "context number of sectors", NULL},
 	{"sector_size",	(getter)Context_get_sector_size, NULL, "context sector size", NULL},
@@ -189,6 +218,7 @@ static PyGetSetDef Context_getseters[] = {
 	{"label",	(getter)Context_get_label, NULL, "context label type", NULL},
 	{"nparts",	(getter)Context_get_nparts, NULL, "context label number of existing partitions", NULL},
 	{"partitions",	(getter)Context_get_partitions, NULL, "context partitions", NULL},
+	{"size_unit",	(getter)Context_get_size_unit, (setter)Context_set_size_unit, "context unit size", NULL},
 	{NULL}
 };
 
