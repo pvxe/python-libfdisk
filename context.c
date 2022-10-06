@@ -41,19 +41,19 @@ static PyObject *Context_new(PyTypeObject *type,
 	return (PyObject *)self;
 }
 
-#define Context_HELP "Context(device=None, details=None)"
+#define Context_HELP "Context(device=None, details=True, readonly=False)"
 static int Context_init(ContextObject *self, PyObject *args, PyObject *kwds)
 {
-	char *device = NULL;
-	int details, rc = 0;
 	char *kwlist[] = {
-		"device", "details",
+		"device", "details", "readonly",
 		NULL
 	};
+	int details = 1, readonly = 0, rc = 0;
+	char *device = NULL;
 
 	if (!PyArg_ParseTupleAndKeywords(args,
-					kwds, "|sp", kwlist,
-					&device, &details)) {
+					kwds, "|spp", kwlist,
+					&device, &details, &readonly)) {
 		PyErr_SetString(PyExc_TypeError, ARG_ERR);
 		return -1;
 	}
@@ -67,8 +67,7 @@ static int Context_init(ContextObject *self, PyObject *args, PyObject *kwds)
 		return -1;
 	}
 
-	/* XXX: always readonly */
-	if (device && (rc = fdisk_assign_device(self->cxt, device, 1)))
+	if (device && (rc = fdisk_assign_device(self->cxt, device, readonly)))
 		return -1;
 	if (details && (rc = fdisk_enable_details(self->cxt, details)))
 		return -1;
@@ -224,8 +223,10 @@ static PyGetSetDef Context_getseters[] = {
 
 static PyObject *Context_repr(ContextObject *self)
 {
-	return PyUnicode_FromFormat("<libfdisk.Context object at %p, details=%s>",
-			self, fdisk_is_details(self->cxt) ? "True" : "False");
+	return PyUnicode_FromFormat("<libfdisk.Context object at %p, details=%s, readonly=%s>",
+				    self,
+				    fdisk_is_details(self->cxt) ? "True" : "False",
+				    fdisk_is_readonly(self->cxt) ? "True" : "False");
 }
 
 PyTypeObject ContextType = {
