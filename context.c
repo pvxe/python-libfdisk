@@ -126,9 +126,45 @@ static PyObject *Context_partition_to_string(ContextObject *self, PyObject *args
 
 	return ret;
 }
+#define Context_create_disklabel_HELP "create_disklabel(label)\n\n" \
+	"Creates a new disk label of type name . If name is NULL, " \
+	"then it will create a default system label type, either SUN or DOS."
+static PyObject *Context_create_disklabel(ContextObject *self, PyObject *args, PyObject *kwds)
+{
+	char *label_name = NULL;
+
+	if (!PyArg_ParseTuple(args, "|s", &label_name)) {
+		PyErr_SetString(PyExc_TypeError, ARG_ERR);
+		return NULL;
+	}
+
+	if (fdisk_create_disklabel(self->cxt, label_name)) {
+		PyErr_Format(PyExc_RuntimeError, "Error creating label %s", label_name);
+		return NULL;
+	}
+
+	Py_RETURN_NONE;
+}
+#define Context_write_disklabel_HELP "write_disklabel()\n\n" \
+	"This function wipes the device (if enabled by fdisk_enable_wipe()) " \
+	"and then it writes in-memory changes to disk. Be careful!"
+static PyObject *Context_write_disklabel(ContextObject *self, PyObject *args, PyObject *kwds)
+{
+	int ret;
+
+	ret = fdisk_write_disklabel(self->cxt);
+	if (ret < 0) {
+		PyErr_Format(PyExc_RuntimeError, "Error writing label to disk: %s", strerror(-ret));
+		return NULL;
+	}
+
+	Py_RETURN_NONE;
+}
 static PyMethodDef Context_methods[] = {
 	{"assign_device",	(PyCFunction)Context_assign_device, METH_VARARGS, Context_assign_device_HELP},
 	{"partition_to_string",	(PyCFunction)Context_partition_to_string, METH_VARARGS, Context_partition_to_string_HELP},
+	{"create_disklabel",	(PyCFunction)Context_create_disklabel, METH_VARARGS, Context_create_disklabel_HELP},
+	{"write_disklabel",	(PyCFunction)Context_write_disklabel, METH_NOARGS, Context_write_disklabel_HELP},
 	{NULL}
 };
 
