@@ -187,7 +187,7 @@ static PyObject *Context_get_size_unit(ContextObject *self)
 }
 static int Context_set_size_unit(ContextObject *self, PyObject *value, void *closure)
 {
-	int cval, ret;
+	int szunit;
 
 	if (value == NULL) {
 		PyErr_SetString(PyExc_TypeError,
@@ -201,8 +201,8 @@ static int Context_set_size_unit(ContextObject *self, PyObject *value, void *clo
 		return -1;
 	}
 
-	cval = (int) PyLong_AsLong(value);
-	if (fdisk_set_size_unit(self->cxt, cval) < 0) {
+	szunit = (int) PyLong_AsLong(value);
+	if (fdisk_set_size_unit(self->cxt, szunit) < 0) {
 		PyErr_SetString(PyExc_TypeError,
 				"Cannot set unit size: invalid size type value");
 		return -1;
