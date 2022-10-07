@@ -55,6 +55,7 @@ static int Partition_init(PartitionObject *self, PyObject *args, PyObject *kwds)
 	*/
 
 	self->pa = fdisk_new_partition();
+	fdisk_partition_start_follow_default(self->pa, 1);
 
 	return 0;
 }

@@ -160,11 +160,37 @@ static PyObject *Context_write_disklabel(ContextObject *self, PyObject *args, Py
 
 	Py_RETURN_NONE;
 }
+#define Context_add_partition_HELP "add_partition(fdisk.Partition)\n\n" \
+	"Adds partition to context"
+static PyObject *Context_add_partition(ContextObject *self, PyObject *args, PyObject *kwds)
+{
+	PartitionObject *partobj;
+	int rc;
+
+	if (!PyArg_ParseTuple(args, "O!", &PartitionType, &partobj)) {
+		PyErr_SetString(PyExc_TypeError, ARG_ERR);
+		return NULL;
+	}
+
+	if (!partobj->pa) {
+		PyErr_SetString(PyExc_TypeError, ARG_ERR);
+		return NULL;
+	}
+
+	rc = fdisk_add_partition(self->cxt, partobj->pa, NULL);
+	if (rc < 0) {
+		PyErr_Format(PyExc_RuntimeError, "Error adding partition to context: %s", strerror(-rc));
+		return NULL;
+	}
+
+	Py_RETURN_NONE;
+}
 static PyMethodDef Context_methods[] = {
 	{"assign_device",	(PyCFunction)Context_assign_device, METH_VARARGS, Context_assign_device_HELP},
 	{"partition_to_string",	(PyCFunction)Context_partition_to_string, METH_VARARGS, Context_partition_to_string_HELP},
 	{"create_disklabel",	(PyCFunction)Context_create_disklabel, METH_VARARGS, Context_create_disklabel_HELP},
 	{"write_disklabel",	(PyCFunction)Context_write_disklabel, METH_NOARGS, Context_write_disklabel_HELP},
+	{"add_partition",	(PyCFunction)Context_add_partition, METH_VARARGS, Context_add_partition_HELP},
 	{NULL}
 };
 
