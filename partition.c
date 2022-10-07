@@ -72,6 +72,28 @@ static PyObject *Partition_get_partno(PartitionObject *self)
 	}
 	Py_RETURN_NONE;
 }
+static int Partition_set_partno(PartitionObject *self, PyObject *value, void *closure)
+{
+	size_t num;
+
+	if (value == NULL) {
+		fdisk_partition_unset_partno(self->pa);
+		return 0;
+	}
+
+	if (!PyLong_Check(value)) {
+		PyErr_SetString(PyExc_TypeError, ARG_ERR);
+		return -1;
+	}
+	num = PyLong_AsSize_t(value);
+	if (fdisk_partition_set_partno(self->pa, num) < 0) {
+		PyErr_SetString(PyExc_TypeError,
+				"libfdisk reported error setting partno");
+		return -1;
+	}
+
+	return 0;
+}
 static PyObject *Partition_get_size(PartitionObject *self)
 {
 	if (fdisk_partition_has_size(self->pa)) {
@@ -79,16 +101,47 @@ static PyObject *Partition_get_size(PartitionObject *self)
 	}
 	Py_RETURN_NONE;
 }
+static int Partition_set_size(PartitionObject *self, PyObject *value, void *closure)
+{
+	uint64_t sectors;
+
+	if (value == NULL) {
+		fdisk_partition_unset_size(self->pa);
+		return 0;
+	}
+
+	if (!PyLong_Check(value)) {
+		PyErr_SetString(PyExc_TypeError,
+				ARG_ERR);
+		return -1;
+	}
+	sectors = PyLong_AsUnsignedLongLong(value);
+	if (fdisk_partition_set_size(self->pa, sectors) < 0) {
+		PyErr_SetString(PyExc_TypeError,
+				"libfdisk reported error setting partition size");
+		return -1;
+	}
+
+	return 0;
+}
 static PyGetSetDef Partition_getseters[] = {
-	{"partno",	(getter)Partition_get_partno, NULL, "partition number", NULL},
-	{"size",	(getter)Partition_get_size, NULL, "number of sectors", NULL},
+	{"partno",	(getter)Partition_get_partno, (setter)Partition_set_partno, "partition number", NULL},
+	{"size",	(getter)Partition_get_size, (setter)Partition_set_size, "number of sectors", NULL},
 	{NULL}
 };
 
 static PyObject *Partition_repr(PartitionObject *self)
 {
-	return PyUnicode_FromFormat("<libfdisk.Partition object at %p>",
-			self);
+	size_t partno;
+
+	if (fdisk_partition_has_partno(self->pa)) {
+		partno = fdisk_partition_get_partno(self->pa);
+		return PyUnicode_FromFormat("<libfdisk.Partition object at %p, partno=%zu>",
+				self, partno);
+	}
+
+	return PyUnicode_FromFormat("<libfdisk.Partition object at %p, partno=None>",
+				    self);
 }
 
 PyTypeObject PartitionType = {
