@@ -70,8 +70,7 @@ static PyObject *Partition_get_partno(PartitionObject *self)
 	if (fdisk_partition_has_partno(self->pa)) {
 		return PyLong_FromSize_t(fdisk_partition_get_partno(self->pa));
 	}
-	// Py_RETURN_NONE;
-	return Py_BuildValue("%d", -1);
+	Py_RETURN_NONE;
 }
 static PyObject *Partition_get_size(PartitionObject *self)
 {
