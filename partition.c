@@ -37,25 +37,43 @@ static PyObject *Partition_new(PyTypeObject *type,
 	return (PyObject *)self;
 }
 
-#define Partition_HELP "Partition()"
+#define Partition_HELP 	"Partition(partno_follow_default=False, " \
+			"start_follow_default=False, " \
+			"end_follow_default=False)"
 static int Partition_init(PartitionObject *self, PyObject *args, PyObject *kwds)
 {
-	/*
 	char *kwlist[] = {
-		"context",
+		"partno_follow_default",
+		"start_follow_default",
+		"end_follow_default",
 		NULL
 	};
-	
+	int partno_follow_default = 0,
+	    start_follow_default = 0,
+	    end_follow_default = 0;
+
 	if (!PyArg_ParseTupleAndKeywords(args,
-					kwds, "|O!", kwlist,
-					&ContextType, &cxt)) {
-		PyErr_SetString(PyExc_TypeError, "Error");
+					kwds, "|ppp", kwlist,
+					&partno_follow_default,
+					&start_follow_default,
+					&end_follow_default)) {
+		PyErr_SetString(PyExc_TypeError, "Invalid arguments for new partition");
 		return -1;
 	}
-	*/
 
 	self->pa = fdisk_new_partition();
-	fdisk_partition_start_follow_default(self->pa, 1);
+	if (fdisk_partition_partno_follow_default(self->pa, partno_follow_default) < 0) {
+		PyErr_SetString(PyExc_RuntimeError, "Error setting partno_follow_default");
+		return -1;
+	}
+	if (fdisk_partition_start_follow_default(self->pa, start_follow_default) < 0) {
+		PyErr_SetString(PyExc_RuntimeError, "Error setting start_follow_default");
+		return -1;
+	}
+	if (fdisk_partition_end_follow_default(self->pa, end_follow_default) < 0) {
+		PyErr_SetString(PyExc_RuntimeError, "Error setting end_follow_default");
+		return -1;
+	}
 
 	return 0;
 }
