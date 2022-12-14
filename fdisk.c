@@ -66,6 +66,7 @@ PyInit_fdisk(void)
 	Context_AddModuleObject(m);
 	Label_AddModuleObject(m);
 	Partition_AddModuleObject(m);
+	PartType_AddModuleObject(m);
 
 
 	return m;

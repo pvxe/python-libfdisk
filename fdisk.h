@@ -39,15 +39,23 @@ typedef struct {
 	struct fdisk_partition		*pa;
 } PartitionObject;
 
+typedef struct {
+	PyObject_HEAD
+	struct fdisk_parttype		*type;
+} PartTypeObject;
+
 extern PyTypeObject ContextType;
 extern PyTypeObject PartitionType;
+extern PyTypeObject PartTypeType;
 
 extern void Context_AddModuleObject(PyObject *mod);
 extern void Label_AddModuleObject(PyObject *mod);
 extern void Partition_AddModuleObject(PyObject *mod);
+extern void PartType_AddModuleObject(PyObject *mod);
 
 extern PyObject *PyObjectResultStr(const char *s);
 extern PyObject *PyObjectResultLabel(struct fdisk_label *lb);
 extern PyObject *PyObjectResultPartition(struct fdisk_partition *pa);
+extern PyObject *PyObjectResultPartType(struct fdisk_parttype *t);
 
 #endif
