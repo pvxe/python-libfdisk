@@ -143,9 +143,40 @@ static int Partition_set_size(PartitionObject *self, PyObject *value, void *clos
 
 	return 0;
 }
+static PyObject *Partition_get_type(PartitionObject *self)
+{
+	struct fdisk_parttype *t;
+
+	t = fdisk_partition_get_type(self->pa);
+	if (t)
+		return PyObjectResultPartType(t);
+
+	Py_RETURN_NONE;
+}
+static int Partition_set_type(PartitionObject *self, PyObject *value, void *closure)
+{
+	if (!value) {
+		PyErr_SetString(PyExc_TypeError,
+				"partition type assertion error");
+		return -1;
+	}
+	if (!PyObject_TypeCheck(value, &PartTypeType)) {
+		PyErr_SetString(PyExc_TypeError,
+				"invalid partition type");
+		return -1;
+	}
+	if (fdisk_partition_set_type(self->pa, ((PartTypeObject *) value)->type) < 0) {
+		PyErr_SetString(PyExc_TypeError,
+				"libfdisk reported error setting partition type");
+		return -1;
+	}
+
+	return 0;
+}
 static PyGetSetDef Partition_getseters[] = {
 	{"partno",	(getter)Partition_get_partno, (setter)Partition_set_partno, "partition number", NULL},
 	{"size",	(getter)Partition_get_size, (setter)Partition_set_size, "number of sectors", NULL},
+	{"type",	(getter)Partition_get_type, (setter)Partition_set_type, "number of sectors", NULL},
 	{NULL}
 };
 
