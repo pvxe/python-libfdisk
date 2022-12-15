@@ -34,7 +34,6 @@ static PyMethodDef FdiskMethods[] = {
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
-
 static struct PyModuleDef fdiskmodule = {
     PyModuleDef_HEAD_INIT,
     "fdisk",   /* name of module */

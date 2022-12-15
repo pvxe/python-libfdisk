@@ -16,7 +16,6 @@ static PyMemberDef Context_members[] = {
 	{ NULL }
 };
 
-
 static void Context_dealloc(ContextObject *self)
 {
 	if (!self->cxt) /* if init fails */
@@ -77,7 +76,6 @@ static int Context_init(ContextObject *self, PyObject *args, PyObject *kwds)
 	return 0;
 }
 
-
 #define Context_assign_device_HELP "assign_device(device)\n\n" \
 	"Open the device, discovery topology, geometry, detect disklabel " \
 	"and switch the current label driver to reflect the probing result. "
@@ -102,6 +100,7 @@ static PyObject *Context_assign_device(ContextObject *self, PyObject *args, PyOb
 	Py_INCREF(Py_None);
 	return Py_None;
 }
+
 #define Context_partition_to_string_HELP "partition_to_string(pa, field)\n\n" \
 	"Retrieve partition field using fdisk_partition_to_string." \
 	"Field constants are available as FDISK_LABEL_*"
@@ -126,6 +125,7 @@ static PyObject *Context_partition_to_string(ContextObject *self, PyObject *args
 
 	return ret;
 }
+
 #define Context_create_disklabel_HELP "create_disklabel(label)\n\n" \
 	"Creates a new disk label of type name . If name is NULL, " \
 	"then it will create a default system label type, either SUN or DOS."
@@ -145,6 +145,7 @@ static PyObject *Context_create_disklabel(ContextObject *self, PyObject *args, P
 
 	Py_RETURN_NONE;
 }
+
 #define Context_write_disklabel_HELP "write_disklabel()\n\n" \
 	"This function wipes the device (if enabled by fdisk_enable_wipe()) " \
 	"and then it writes in-memory changes to disk. Be careful!"
@@ -160,6 +161,7 @@ static PyObject *Context_write_disklabel(ContextObject *self, PyObject *args, Py
 
 	Py_RETURN_NONE;
 }
+
 #define Context_add_partition_HELP "add_partition(fdisk.Partition)\n\n" \
 	"Adds partition to context. Returns partno of the new partition."
 static PyObject *Context_add_partition(ContextObject *self, PyObject *args, PyObject *kwds)
@@ -186,6 +188,7 @@ static PyObject *Context_add_partition(ContextObject *self, PyObject *args, PyOb
 
 	return Py_BuildValue("n", partno);
 }
+
 static PyMethodDef Context_methods[] = {
 	{"assign_device",	(PyCFunction)Context_assign_device, METH_VARARGS, Context_assign_device_HELP},
 	{"partition_to_string",	(PyCFunction)Context_partition_to_string, METH_VARARGS, Context_partition_to_string_HELP},
@@ -195,19 +198,21 @@ static PyMethodDef Context_methods[] = {
 	{NULL}
 };
 
-
 static PyObject *Context_get_nsectors(ContextObject *self)
 {
 	return PyLong_FromUnsignedLong(fdisk_get_nsectors(self->cxt));
 }
+
 static PyObject *Context_get_sector_size(ContextObject *self)
 {
 	return PyLong_FromUnsignedLong(fdisk_get_sector_size(self->cxt));
 }
+
 static PyObject *Context_get_devname(ContextObject *self)
 {
 	return PyObjectResultStr(fdisk_get_devname(self->cxt));
 }
+
 static PyObject *Context_get_label(ContextObject *self)
 {
 	struct fdisk_context *cxt = self->cxt;
@@ -218,10 +223,12 @@ static PyObject *Context_get_label(ContextObject *self)
 		Py_RETURN_NONE;
 	}
 }
+
 static PyObject *Context_get_nparts(ContextObject *self)
 {
 	return PyLong_FromLong(fdisk_table_get_nents(self->tb));
 }
+
 static PyObject *Context_get_partitions(ContextObject *self)
 {
 	PyObject *p, *list = PyList_New(0); /* XXX: null if failed*/
@@ -244,10 +251,12 @@ static PyObject *Context_get_partitions(ContextObject *self)
 
 	return list;
 }
+
 static PyObject *Context_get_size_unit(ContextObject *self)
 {
 	return PyLong_FromLong(fdisk_get_size_unit(self->cxt));
 }
+
 static int Context_set_size_unit(ContextObject *self, PyObject *value, void *closure)
 {
 	int szunit;
@@ -273,6 +282,7 @@ static int Context_set_size_unit(ContextObject *self, PyObject *value, void *clo
 
 	return 0;
 }
+
 static PyGetSetDef Context_getseters[] = {
 	{"nsectors",	(getter)Context_get_nsectors, NULL, "context number of sectors", NULL},
 	{"sector_size",	(getter)Context_get_sector_size, NULL, "context sector size", NULL},

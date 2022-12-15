@@ -12,11 +12,9 @@
 
 #include "fdisk.h"
 
-
 static PyMemberDef Partition_members[] = {
 	{ NULL }
 };
-
 
 static void Partition_dealloc(PartitionObject *self)
 {
@@ -78,11 +76,9 @@ static int Partition_init(PartitionObject *self, PyObject *args, PyObject *kwds)
 	return 0;
 }
 
-
 static PyMethodDef Partition_methods[] = {
 	{NULL}
 };
-
 
 static PyObject *Partition_get_partno(PartitionObject *self)
 {
@@ -91,6 +87,7 @@ static PyObject *Partition_get_partno(PartitionObject *self)
 	}
 	Py_RETURN_NONE;
 }
+
 static int Partition_set_partno(PartitionObject *self, PyObject *value, void *closure)
 {
 	size_t num;
@@ -113,6 +110,7 @@ static int Partition_set_partno(PartitionObject *self, PyObject *value, void *cl
 
 	return 0;
 }
+
 static PyObject *Partition_get_size(PartitionObject *self)
 {
 	if (fdisk_partition_has_size(self->pa)) {
@@ -120,6 +118,7 @@ static PyObject *Partition_get_size(PartitionObject *self)
 	}
 	Py_RETURN_NONE;
 }
+
 static int Partition_set_size(PartitionObject *self, PyObject *value, void *closure)
 {
 	uint64_t sectors;
@@ -143,6 +142,7 @@ static int Partition_set_size(PartitionObject *self, PyObject *value, void *clos
 
 	return 0;
 }
+
 static PyObject *Partition_get_type(PartitionObject *self)
 {
 	struct fdisk_parttype *t;
@@ -153,6 +153,7 @@ static PyObject *Partition_get_type(PartitionObject *self)
 
 	Py_RETURN_NONE;
 }
+
 static int Partition_set_type(PartitionObject *self, PyObject *value, void *closure)
 {
 	if (!value) {
@@ -173,6 +174,7 @@ static int Partition_set_type(PartitionObject *self, PyObject *value, void *clos
 
 	return 0;
 }
+
 static PyGetSetDef Partition_getseters[] = {
 	{"partno",	(getter)Partition_get_partno, (setter)Partition_set_partno, "partition number", NULL},
 	{"size",	(getter)Partition_get_size, (setter)Partition_set_size, "number of sectors", NULL},

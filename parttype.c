@@ -9,6 +9,7 @@
  * Author: Jose M. Guisado <jguisado@soleta.eu>
  */
 
+
 #include "fdisk.h"
 
 static PyMemberDef PartType_members[] = {
@@ -28,10 +29,12 @@ static PyObject *PartType_get_name(PartTypeObject *self)
 {
 	return PyObjectResultStr(fdisk_parttype_get_name(self->type));
 }
+
 static PyObject *PartType_get_code(PartTypeObject *self)
 {
 	return PyLong_FromUnsignedLong(fdisk_parttype_get_code(self->type));
 }
+
 static PyGetSetDef PartType_getseters[] = {
 	{"name",	(getter)PartType_get_name, NULL, "parttype human readable name", NULL},
 	{"code",	(getter)PartType_get_code, NULL, "parttype DOS code", NULL},

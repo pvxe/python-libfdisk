@@ -12,11 +12,9 @@
 
 #include "fdisk.h"
 
-
 static PyMemberDef Label_members[] = {
 	{ NULL }
 };
-
 
 static void Label_dealloc(LabelObject *self)
 {
@@ -80,6 +78,7 @@ static PyObject *Label_get_parttype_from_code(LabelObject *self, PyObject *args,
 
 	return PyObjectResultPartType(ptype);
 }
+
 #define Label_get_parttype_from_string_HELP "get_parttype_from_string(uuid)\n\n" \
 	"Search by string for partition type in label-specific table."
 static PyObject *Label_get_parttype_from_string(LabelObject *self, PyObject *args, PyObject *kwds)
@@ -100,21 +99,23 @@ static PyObject *Label_get_parttype_from_string(LabelObject *self, PyObject *arg
 
 	return PyObjectResultPartType(ptype);
 }
+
 static PyMethodDef Label_methods[] = {
 	{"get_parttype_from_code",	(PyCFunction)Label_get_parttype_from_code, METH_VARARGS, Label_get_parttype_from_code_HELP},
 	{"get_parttype_from_string",	(PyCFunction)Label_get_parttype_from_string, METH_VARARGS, Label_get_parttype_from_string_HELP},
 	{NULL}
 };
 
-
 static PyObject *Label_get_type(LabelObject *self)
 {
 	return PyLong_FromLong(fdisk_label_get_type(self->lb));
 }
+
 static PyObject *Label_get_name(LabelObject *self)
 {
 	return PyObjectResultStr(fdisk_label_get_name(self->lb));
 }
+
 static PyGetSetDef Label_getseters[] = {
 	{"type",	(getter)Label_get_type, NULL, "label type", NULL},
 	{"name",	(getter)Label_get_name, NULL, "label name", NULL},
