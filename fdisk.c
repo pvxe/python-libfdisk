@@ -14,6 +14,25 @@
 
 #include "fdisk.h"
 
+void *set_PyErr_from_rc(int e)
+{
+	switch (e) {
+	case ENOMEM:
+		PyErr_SetString(PyExc_MemoryError, strerror(e));
+		break;
+	case EINVAL:
+		PyErr_SetString(PyExc_TypeError, strerror(e));
+		break;
+	case ENOSYS:
+		PyErr_SetString(PyExc_NotImplementedError, strerror(e));
+		break;
+	default:
+		PyErr_SetString(PyExc_Exception, strerror(e));
+	}
+
+	return NULL;
+}
+
 PyObject *PyObjectResultStr(const char *s)
 {
 	PyObject *result;

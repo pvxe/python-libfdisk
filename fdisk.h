@@ -58,4 +58,6 @@ extern PyObject *PyObjectResultLabel(struct fdisk_label *lb);
 extern PyObject *PyObjectResultPartition(struct fdisk_partition *pa);
 extern PyObject *PyObjectResultPartType(struct fdisk_parttype *t);
 
+extern void *set_PyErr_from_rc(int err);
+
 #endif

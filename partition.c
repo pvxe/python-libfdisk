@@ -48,7 +48,8 @@ static int Partition_init(PartitionObject *self, PyObject *args, PyObject *kwds)
 	};
 	int partno_follow_default = 0,
 	    start_follow_default = 0,
-	    end_follow_default = 0;
+	    end_follow_default = 0,
+	    rc;
 
 	if (!PyArg_ParseTupleAndKeywords(args,
 					kwds, "|ppp", kwlist,
@@ -60,16 +61,16 @@ static int Partition_init(PartitionObject *self, PyObject *args, PyObject *kwds)
 	}
 
 	self->pa = fdisk_new_partition();
-	if (fdisk_partition_partno_follow_default(self->pa, partno_follow_default) < 0) {
-		PyErr_SetString(PyExc_RuntimeError, "Error setting partno_follow_default");
+	if ((rc = fdisk_partition_partno_follow_default(self->pa, partno_follow_default) < 0)) {
+		set_PyErr_from_rc(-rc);
 		return -1;
 	}
-	if (fdisk_partition_start_follow_default(self->pa, start_follow_default) < 0) {
-		PyErr_SetString(PyExc_RuntimeError, "Error setting start_follow_default");
+	if ((rc = fdisk_partition_start_follow_default(self->pa, start_follow_default) < 0)) {
+		set_PyErr_from_rc(-rc);
 		return -1;
 	}
-	if (fdisk_partition_end_follow_default(self->pa, end_follow_default) < 0) {
-		PyErr_SetString(PyExc_RuntimeError, "Error setting end_follow_default");
+	if ((rc = fdisk_partition_end_follow_default(self->pa, end_follow_default) < 0)) {
+		set_PyErr_from_rc(-rc);
 		return -1;
 	}
 
