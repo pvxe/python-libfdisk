@@ -37,11 +37,7 @@ PyObject *PyObjectResultStr(const char *s)
 {
 	PyObject *result;
 	if (!s)
-		/* TODO: maybe lie about it and return "":
-		 * which would allow for
-		 * fs = libmount.Fs()
-		 * fs.comment += "comment"
-		return Py_BuildValue("s", ""); */
+		/* XXX: return Py_BuildValue("s", ""); */
 		Py_RETURN_NONE;
 	result = Py_BuildValue("s", s);
 	if (!result)
