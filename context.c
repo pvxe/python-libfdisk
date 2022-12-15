@@ -43,7 +43,7 @@ static PyObject *Context_new(PyTypeObject *type,
 #define Context_HELP "Context(device=None, details=True, readonly=False)"
 static int Context_init(ContextObject *self, PyObject *args, PyObject *kwds)
 {
-	char *kwlist[] = {
+	static char *kwlist[] = {
 		"device", "details", "readonly",
 		NULL
 	};

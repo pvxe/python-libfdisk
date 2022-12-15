@@ -40,7 +40,7 @@ static PyObject *Partition_new(PyTypeObject *type,
 			"end_follow_default=False)"
 static int Partition_init(PartitionObject *self, PyObject *args, PyObject *kwds)
 {
-	char *kwlist[] = {
+	static char *kwlist[] = {
 		"partno_follow_default",
 		"start_follow_default",
 		"end_follow_default",

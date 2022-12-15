@@ -37,12 +37,9 @@ static PyObject *Label_new(PyTypeObject *type,
 #define Label_HELP "Label(context=None)"
 static int Label_init(LabelObject *self, PyObject *args, PyObject *kwds)
 {
+	static char *kwlist[] = { "context", NULL };
 	ContextObject *cxt = NULL;
 	struct fdisk_label *lb;
-	char *kwlist[] = {
-		"context",
-		NULL
-	};
 	
 	if (!PyArg_ParseTupleAndKeywords(args,
 					kwds, "|O!", kwlist,
