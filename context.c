@@ -33,7 +33,6 @@ static PyObject *Context_new(PyTypeObject *type,
 
 	if (self) {
 		self->cxt = NULL;
-		self->lb = NULL;
 		self->tb = NULL;
 	}
 
@@ -96,7 +95,6 @@ static PyObject *Context_assign_device(ContextObject *self, PyObject *args, PyOb
 	/* XXX: readonly */
 	fdisk_assign_device(self->cxt, fname, 1);
 
-	self->lb = fdisk_get_label(self->cxt, NULL);
 	fdisk_get_partitions(self->cxt, &self->tb);
 
 	Py_INCREF(Py_None);

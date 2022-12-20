@@ -25,7 +25,6 @@
 typedef struct {
 	PyObject_HEAD
 	struct fdisk_context		*cxt;
-	struct fdisk_label		*lb;
 	struct fdisk_table		*tb;
 } ContextObject;
 
