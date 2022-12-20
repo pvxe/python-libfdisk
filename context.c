@@ -74,11 +74,7 @@ static int Context_init(ContextObject *self, PyObject *args, PyObject *kwds)
 		set_PyErr_from_rc(-rc);
 		return -1;
 	}
-
-	if ((fdisk_get_partitions(self->cxt, &self->tb) < 0)) {
-		set_PyErr_from_rc(-rc);
-		return -1;
-	}
+	fdisk_get_partitions(self->cxt, &self->tb);
 
 	return 0;
 }
@@ -89,7 +85,6 @@ static int Context_init(ContextObject *self, PyObject *args, PyObject *kwds)
 static PyObject *Context_assign_device(ContextObject *self, PyObject *args, PyObject *kwds)
 {
 	char *fname;
-	int rc;
 
 	if (!PyArg_ParseTuple(args, "s", &fname)) {
 		PyErr_SetString(PyExc_TypeError, ARG_ERR);
@@ -102,10 +97,7 @@ static PyObject *Context_assign_device(ContextObject *self, PyObject *args, PyOb
 	fdisk_assign_device(self->cxt, fname, 1);
 
 	self->lb = fdisk_get_label(self->cxt, NULL);
-	if ((rc = fdisk_get_partitions(self->cxt, &self->tb) < 0)) {
-		set_PyErr_from_rc(-rc);
-		return NULL;
-	}
+	fdisk_get_partitions(self->cxt, &self->tb);
 
 	Py_INCREF(Py_None);
 	return Py_None;
