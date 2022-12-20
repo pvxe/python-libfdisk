@@ -296,8 +296,14 @@ static PyGetSetDef Context_getseters[] = {
 
 static PyObject *Context_repr(ContextObject *self)
 {
-	return PyUnicode_FromFormat("<libfdisk.Context object at %p, details=%s, readonly=%s>",
+	PyObject *lbo = Py_None;
+
+	if (fdisk_has_label(self->cxt))
+		lbo = PyObjectResultLabel(fdisk_get_label(self->cxt, NULL));
+
+	return PyUnicode_FromFormat("<libfdisk.Context object at %p, label=%R, details=%s, readonly=%s>",
 				    self,
+				    lbo,
 				    fdisk_is_details(self->cxt) ? "True" : "False",
 				    fdisk_is_readonly(self->cxt) ? "True" : "False");
 }
