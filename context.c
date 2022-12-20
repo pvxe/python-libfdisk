@@ -78,23 +78,23 @@ static int Context_init(ContextObject *self, PyObject *args, PyObject *kwds)
 	return 0;
 }
 
-#define Context_assign_device_HELP "assign_device(device)\n\n" \
+#define Context_assign_device_HELP "assign_device(device, readonly=False)\n\n" \
 	"Open the device, discovery topology, geometry, detect disklabel " \
 	"and switch the current label driver to reflect the probing result. "
 static PyObject *Context_assign_device(ContextObject *self, PyObject *args, PyObject *kwds)
 {
+	static char *kwlist[] = { "readonly", NULL };
+	int readonly = 0;
 	char *fname;
 
-	if (!PyArg_ParseTuple(args, "s", &fname)) {
+	if (!PyArg_ParseTupleAndKeywords(args,
+					 kwds, "s|p", kwlist,
+					 &readonly)) {
 		PyErr_SetString(PyExc_TypeError, ARG_ERR);
 		return NULL;
 	}
 
-	/* Assert self->cxt */
-
-	/* XXX: readonly */
-	fdisk_assign_device(self->cxt, fname, 1);
-
+	fdisk_assign_device(self->cxt, fname, readonly);
 	fdisk_get_partitions(self->cxt, &self->tb);
 
 	Py_INCREF(Py_None);
