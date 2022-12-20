@@ -84,8 +84,13 @@ static int Context_init(ContextObject *self, PyObject *args, PyObject *kwds)
 static PyObject *Context_assign_device(ContextObject *self, PyObject *args, PyObject *kwds)
 {
 	static char *kwlist[] = { "readonly", NULL };
-	int readonly = 0;
+	int rc, readonly = 0;
 	char *fname;
+
+	if (!self->cxt) {
+		PyErr_SetString(PyExc_TypeError, ARG_ERR);
+		return NULL;
+	}
 
 	if (!PyArg_ParseTupleAndKeywords(args,
 					 kwds, "s|p", kwlist,
@@ -94,7 +99,10 @@ static PyObject *Context_assign_device(ContextObject *self, PyObject *args, PyOb
 		return NULL;
 	}
 
-	fdisk_assign_device(self->cxt, fname, readonly);
+	if ((rc = fdisk_assign_device(self->cxt, fname, readonly)) < 0) {
+		set_PyErr_from_rc(-rc);
+		return NULL;
+	}
 	fdisk_get_partitions(self->cxt, &self->tb);
 
 	Py_INCREF(Py_None);
