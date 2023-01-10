@@ -83,9 +83,9 @@ static int Context_init(ContextObject *self, PyObject *args, PyObject *kwds)
 	"and switch the current label driver to reflect the probing result. "
 static PyObject *Context_assign_device(ContextObject *self, PyObject *args, PyObject *kwds)
 {
-	static char *kwlist[] = { "readonly", NULL };
+	static char *kwlist[] = { "", "readonly", NULL };
 	int rc, readonly = 0;
-	char *fname;
+	char *device;
 
 	if (!self->cxt) {
 		PyErr_SetString(PyExc_TypeError, ARG_ERR);
@@ -93,13 +93,13 @@ static PyObject *Context_assign_device(ContextObject *self, PyObject *args, PyOb
 	}
 
 	if (!PyArg_ParseTupleAndKeywords(args,
-					 kwds, "s|p", kwlist,
-					 &readonly)) {
+					 kwds, "s|$p", kwlist,
+					 &device, &readonly)) {
 		PyErr_SetString(PyExc_TypeError, ARG_ERR);
 		return NULL;
 	}
 
-	if ((rc = fdisk_assign_device(self->cxt, fname, readonly)) < 0) {
+	if ((rc = fdisk_assign_device(self->cxt, device, readonly)) < 0) {
 		set_PyErr_from_rc(-rc);
 		return NULL;
 	}
@@ -198,7 +198,7 @@ static PyObject *Context_add_partition(ContextObject *self, PyObject *args, PyOb
 }
 
 static PyMethodDef Context_methods[] = {
-	{"assign_device",	(PyCFunction)Context_assign_device, METH_VARARGS, Context_assign_device_HELP},
+	{"assign_device",	(PyCFunction)Context_assign_device, METH_VARARGS | METH_KEYWORDS, Context_assign_device_HELP},
 	{"partition_to_string",	(PyCFunction)Context_partition_to_string, METH_VARARGS, Context_partition_to_string_HELP},
 	{"create_disklabel",	(PyCFunction)Context_create_disklabel, METH_VARARGS, Context_create_disklabel_HELP},
 	{"write_disklabel",	(PyCFunction)Context_write_disklabel, METH_NOARGS, Context_write_disklabel_HELP},
