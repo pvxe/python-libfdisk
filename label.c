@@ -59,15 +59,23 @@ static int Label_init(LabelObject *self, PyObject *args, PyObject *kwds)
 	"Search for partition type in label-specific table."
 static PyObject *Label_get_parttype_from_code(LabelObject *self, PyObject *args, PyObject *kwds)
 {
+	struct fdisk_label *label = self->lb;
 	struct fdisk_parttype *ptype;
 	unsigned int ptype_code;
+	const char *name;
 
 	if (!PyArg_ParseTuple(args, "I", &ptype_code)) {
 		PyErr_SetString(PyExc_TypeError, ARG_ERR);
 		return NULL;
 	}
 
-	ptype = fdisk_label_get_parttype_from_code(self->lb, ptype_code);
+	if (!fdisk_label_has_code_parttypes(label)) {
+		name = fdisk_label_get_name(label);
+		PyErr_Format(PyExc_RuntimeError, "Current label %s has no code parttypes", name);
+		return NULL;
+	}
+
+	ptype = fdisk_label_get_parttype_from_code(label, ptype_code);
 	if (!ptype) {
 		PyErr_Format(PyExc_RuntimeError, "No match for parttype with code: %d", ptype_code);
 		return NULL;
@@ -80,7 +88,9 @@ static PyObject *Label_get_parttype_from_code(LabelObject *self, PyObject *args,
 	"Search by string for partition type in label-specific table."
 static PyObject *Label_get_parttype_from_string(LabelObject *self, PyObject *args, PyObject *kwds)
 {
+	struct fdisk_label *label = self->lb;
 	struct fdisk_parttype *ptype = NULL;
+	const char *name;
 	char *str;
 
 	if (!PyArg_ParseTuple(args, "s", &str)) {
@@ -88,7 +98,13 @@ static PyObject *Label_get_parttype_from_string(LabelObject *self, PyObject *arg
 		return NULL;
 	}
 
-	ptype = fdisk_label_get_parttype_from_string(self->lb, str);
+	if (fdisk_label_has_code_parttypes(label)) {
+		name = fdisk_label_get_name(label);
+		PyErr_Format(PyExc_RuntimeError, "Current label %s has no string parttypes", name);
+		return NULL;
+	}
+
+	ptype = fdisk_label_get_parttype_from_string(label, str);
 	if (!ptype) {
 		PyErr_Format(PyExc_RuntimeError, "No match for parttype with string: %s", str);
 		return NULL;
