@@ -25,6 +25,11 @@ static PyMethodDef PartType_methods[] = {
 	{NULL}
 };
 
+static PyObject *PartType_get_string(PartTypeObject *self)
+{
+	return PyObjectResultStr(fdisk_parttype_get_string(self->type));
+}
+
 static PyObject *PartType_get_name(PartTypeObject *self)
 {
 	return PyObjectResultStr(fdisk_parttype_get_name(self->type));
@@ -36,6 +41,7 @@ static PyObject *PartType_get_code(PartTypeObject *self)
 }
 
 static PyGetSetDef PartType_getseters[] = {
+	{"string",	(getter)PartType_get_string, NULL, "partition type string (GUID for GPT)", NULL},
 	{"name",	(getter)PartType_get_name, NULL, "parttype human readable name", NULL},
 	{"code",	(getter)PartType_get_code, NULL, "parttype DOS code", NULL},
 	{NULL}
