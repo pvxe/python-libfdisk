@@ -193,6 +193,11 @@ static PyObject *Context_add_partition(ContextObject *self, PyObject *args, PyOb
 		PyErr_Format(PyExc_RuntimeError, "Error adding partition to context: %s", strerror(-rc));
 		return NULL;
 	}
+	rc = fdisk_wipe_partition(self->cxt, partno, 1);
+	if (rc < 0) {
+		PyErr_Format(PyExc_RuntimeError, "Error setting wipe for new partition: %s", strerror(-rc));
+		return NULL;
+	}
 
 	return Py_BuildValue("n", partno);
 }
