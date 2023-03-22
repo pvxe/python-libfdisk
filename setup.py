@@ -6,6 +6,6 @@ libfdisk = Extension('fdisk',
                                'partition.c', 'parttype.c'])
 
 setup (name = 'libfdisk',
-       version = '1.1',
+       version = '1.2',
        description = 'Python bindings for libfdisk',
        ext_modules = [libfdisk])
